@@ -9,9 +9,7 @@ spec:
   group: synopsys.com
   names:
     kind: PolarisDB
-    listKind: PolarisDBList
     plural: polarisdbs
-    singular: polarisdb
   scope: ""
   validation:
     openAPIV3Schema:
@@ -42,7 +40,10 @@ spec:
                   format: int32
                   type: integer
                 storage_size:
-                  type: string
+                  properties:
+                    size:
+                      type: string
+                  type: object
               type: object
             image_pull_secrets:
               type: string
@@ -57,7 +58,6 @@ spec:
                 password:
                   type: string
                 port:
-                  format: int32
                   type: integer
                 username:
                   type: string
@@ -75,9 +75,6 @@ spec:
                   type: string
                 storage_class:
                   type: string
-              required:
-              - size
-              - storage_class
               type: object
             smtp_details:
               properties:
@@ -86,7 +83,6 @@ spec:
                 password:
                   type: string
                 port:
-                  format: int32
                   type: integer
                 username:
                   type: string
@@ -120,10 +116,6 @@ spec:
                   properties:
                     size:
                       type: string
-                    storage_class:
-                      type: string
-                    type:
-                      type: string
                   type: object
               type: object
             version:
@@ -152,7 +144,6 @@ spec:
           - state
           type: object
       type: object
-  version: v1
   versions:
   - name: v1
     served: true

@@ -9,9 +9,7 @@ spec:
   group: synopsys.com
   names:
     kind: Alert
-    listKind: AlertList
     plural: alerts
-    singular: alert
   scope: ""
   validation:
     openAPIV3Schema:
@@ -144,7 +142,6 @@ spec:
           - state
           type: object
       type: object
-  version: v1
   versions:
   - name: v1
     served: true

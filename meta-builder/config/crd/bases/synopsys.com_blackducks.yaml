@@ -9,9 +9,7 @@ spec:
   group: synopsys.com
   names:
     kind: Blackduck
-    listKind: BlackduckList
     plural: blackducks
-    singular: blackduck
   scope: ""
   validation:
     openAPIV3Schema:
@@ -168,7 +166,6 @@ spec:
           - state
           type: object
       type: object
-  version: v1
   versions:
   - name: v1
     served: true
