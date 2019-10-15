@@ -59,6 +59,7 @@ type CRSpecBuilderFromCobraFlags struct {
 	ScannerPodReplicaCount                          int
 	ScannerPodImageDirectory                        string
 	PerceiverEnableImagePerceiver                   string
+	PerceiverEnableArtifactoryPerceiver             string
 	PerceiverEnablePodPerceiver                     string
 	PerceiverPodPerceiverNamespaceFilter            string
 	PerceiverAnnotationIntervalSeconds              int
@@ -163,6 +164,7 @@ func (ctl *CRSpecBuilderFromCobraFlags) AddCRSpecFlagsToCommand(cmd *cobra.Comma
 	cmd.Flags().IntVar(&ctl.ScannerPodReplicaCount, "scannerpod-replica-count", ctl.ScannerPodReplicaCount, "Number of Containers for scanning")
 	cmd.Flags().StringVar(&ctl.ScannerPodImageDirectory, "scannerpod-image-directory", ctl.ScannerPodImageDirectory, "Directory in Scanner's pod where images are stored for scanning")
 	cmd.Flags().StringVar(&ctl.PerceiverEnableImagePerceiver, "enable-image-processor", ctl.PerceiverEnableImagePerceiver, "If true, Image Processor discovers images for scanning [true|false]")
+	cmd.Flags().StringVar(&ctl.PerceiverEnableArtifactoryPerceiver, "enable-artifactory-processor", ctl.PerceiverEnableArtifactoryPerceiver, "If true, Artifactory Processor discovers artifactory images for scanning [true|false]")
 	cmd.Flags().StringVar(&ctl.PerceiverEnablePodPerceiver, "enable-pod-processor", ctl.PerceiverEnablePodPerceiver, "If true, Pod Processor discovers pods for scanning [true|false]")
 	cmd.Flags().StringVar(&ctl.PerceiverPodPerceiverNamespaceFilter, "pod-processor-namespace-filter", ctl.PerceiverPodPerceiverNamespaceFilter, "Pod Processor's filter to scan pods by their namespace")
 	cmd.Flags().IntVar(&ctl.PerceiverAnnotationIntervalSeconds, "processor-annotation-interval-seconds", ctl.PerceiverAnnotationIntervalSeconds, "Refresh interval to get latest scan results and apply to Pods and Images")
@@ -324,6 +326,11 @@ func (ctl *CRSpecBuilderFromCobraFlags) SetCRSpecFieldByFlag(f *pflag.Flag) {
 				ctl.opsSightSpec.Perceiver = &opssightapi.Perceiver{}
 			}
 			ctl.opsSightSpec.Perceiver.EnableImagePerceiver = strings.ToUpper(ctl.PerceiverEnableImagePerceiver) == "TRUE"
+		case "enable-artifactory-processor":
+			if ctl.opsSightSpec.Perceiver == nil {
+				ctl.opsSightSpec.Perceiver = &opssightapi.Perceiver{}
+			}
+			ctl.opsSightSpec.Perceiver.EnableArtifactoryPerceiver = strings.ToUpper(ctl.PerceiverEnableArtifactoryPerceiver) == "TRUE"
 		case "enable-pod-processor":
 			if ctl.opsSightSpec.Perceiver == nil {
 				ctl.opsSightSpec.Perceiver = &opssightapi.Perceiver{}

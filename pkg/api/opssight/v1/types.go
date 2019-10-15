@@ -45,6 +45,7 @@ type RegistryAuth struct {
 	URL      string `json:"Url"`
 	User     string `json:"user"`
 	Password string `json:"password"`
+	Token    string `json:"token"`
 }
 
 // Host configures the Black Duck hosts
@@ -107,11 +108,12 @@ type PodPerceiver struct {
 
 // Perceiver stores the Perceiver configuration
 type Perceiver struct {
-	EnableImagePerceiver      bool          `json:"enableImagePerceiver"`
-	EnablePodPerceiver        bool          `json:"enablePodPerceiver"`
-	PodPerceiver              *PodPerceiver `json:"podPerceiver,omitempty"`
-	AnnotationIntervalSeconds int           `json:"annotationIntervalSeconds"`
-	DumpIntervalMinutes       int           `json:"dumpIntervalMinutes"`
+	EnableImagePerceiver       bool          `json:"enableImagePerceiver"`
+	EnableArtifactoryPerceiver bool          `json:"enableArtifactoryPerceiver"`
+	EnablePodPerceiver         bool          `json:"enablePodPerceiver"`
+	PodPerceiver               *PodPerceiver `json:"podPerceiver,omitempty"`
+	AnnotationIntervalSeconds  int           `json:"annotationIntervalSeconds"`
+	DumpIntervalMinutes        int           `json:"dumpIntervalMinutes"`
 }
 
 // Skyfire stores the Skyfire configuration

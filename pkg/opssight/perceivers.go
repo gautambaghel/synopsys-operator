@@ -63,6 +63,21 @@ func (p *SpecConfig) ImagePerceiverReplicationController() (*components.Replicat
 	return rc, nil
 }
 
+// ArtifactoryPerceiverReplicationController creates a replication controller for the artifactory perceiver
+func (p *SpecConfig) ArtifactoryPerceiverReplicationController() (*components.ReplicationController, error) {
+	name := fmt.Sprintf("artifactory-perceiver")
+	image := fmt.Sprintf("docker.io/gautambaghel/art:test")
+
+	rc := p.perceiverReplicationController(name, 1)
+
+	pod, err := p.perceiverPod(name, image, util.GetResourceName(p.opssight.Name, util.OpsSightName, p.names["perceiver-service-account"]))
+	if err != nil {
+		return nil, errors.Annotate(err, "failed to create pod perceiver pod")
+	}
+	rc.AddPod(pod)
+	return rc, nil
+}
+
 func (p *SpecConfig) perceiverReplicationController(name string, replicas int32) *components.ReplicationController {
 	rc := components.NewReplicationController(horizonapi.ReplicationControllerConfig{
 		Replicas:  &replicas,
@@ -144,7 +159,9 @@ func (p *SpecConfig) perceiverContainer(name string, image string) (*components.
 	if err != nil {
 		return nil, errors.Annotatef(err, "unable to add the volume mount to %s container", name)
 	}
-
+	if strings.Contains(name, "artifactory") {
+		container.AddEnv(horizonapi.EnvConfig{Type: horizonapi.EnvFromSecret, FromName: util.GetResourceName(p.opssight.Name, util.OpsSightName, "blackduck")})
+	}
 	return container, nil
 }
 
@@ -192,6 +209,11 @@ func (p *SpecConfig) PodPerceiverService() *components.Service {
 // ImagePerceiverService creates a service for the image perceiver
 func (p *SpecConfig) ImagePerceiverService() *components.Service {
 	return p.perceiverService(p.names["image-perceiver"])
+}
+
+// ArtifactoryPerceiverService creates a service for the Artifactory perceiver
+func (p *SpecConfig) ArtifactoryPerceiverService() *components.Service {
+	return p.perceiverService(p.names["artifactory-perceiver"])
 }
 
 func (p *SpecConfig) perceiverServiceAccount(name string) *components.ServiceAccount {
