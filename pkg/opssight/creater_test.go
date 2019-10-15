@@ -325,6 +325,7 @@ func getOpsSightDefaultValue() *opssightapi.OpsSight {
 			Perceiver: &opssightapi.Perceiver{
 				EnableImagePerceiver:       false,
 				EnableArtifactoryPerceiver: false,
+				EnableQuayPerceiver:        false,
 				EnablePodPerceiver:         true,
 				PodPerceiver:               &opssightapi.PodPerceiver{},
 				AnnotationIntervalSeconds:  30,
