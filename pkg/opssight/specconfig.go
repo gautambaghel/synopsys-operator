@@ -61,6 +61,7 @@ func NewSpecConfig(config *protoform.Config, kubeClient *kubernetes.Clientset, o
 		"perceptor":                 "core",
 		"pod-perceiver":             "pod-processor",
 		"image-perceiver":           "image-processor",
+		"artifactory-perceiver":     "artifactory-processor",
 		"scanner":                   "scanner",
 		"perceptor-imagefacade":     "image-getter",
 		"skyfire":                   "skyfire",
@@ -74,6 +75,7 @@ func NewSpecConfig(config *protoform.Config, kubeClient *kubernetes.Clientset, o
 		"perceptor":             fmt.Sprintf("%s/opssight-core:%s", baseImageURL, version),
 		"pod-perceiver":         fmt.Sprintf("%s/opssight-pod-processor:%s", baseImageURL, version),
 		"image-perceiver":       fmt.Sprintf("%s/opssight-image-processor:%s", baseImageURL, version),
+		"artifactory-perceiver": fmt.Sprintf("%s/opssight-artifactory-processor:%s", baseImageURL, version),
 		"scanner":               fmt.Sprintf("%s/opssight-scanner:%s", baseImageURL, version),
 		"perceptor-imagefacade": fmt.Sprintf("%s/opssight-image-getter:%s", baseImageURL, version),
 		"skyfire":               "gcr.io/saas-hub-stg/blackducksoftware/pyfire:master",
@@ -84,6 +86,7 @@ func NewSpecConfig(config *protoform.Config, kubeClient *kubernetes.Clientset, o
 			"perceptor":                 "perceptor",
 			"pod-perceiver":             "pod-perceiver",
 			"image-perceiver":           "image-perceiver",
+			"artifactory-perceiver":     "artifactory-perceiver",
 			"scanner":                   "scanner",
 			"perceptor-imagefacade":     "image-facade",
 			"skyfire":                   "skyfire",
@@ -97,6 +100,7 @@ func NewSpecConfig(config *protoform.Config, kubeClient *kubernetes.Clientset, o
 			"perceptor":             fmt.Sprintf("%s/perceptor:%s", baseImageURL, version),
 			"pod-perceiver":         fmt.Sprintf("%s/pod-perceiver:%s", baseImageURL, version),
 			"image-perceiver":       fmt.Sprintf("%s/image-perceiver:%s", baseImageURL, version),
+			"artifactory-perceiver": fmt.Sprintf("%s/artifactory-perceiver:%s", baseImageURL, version),
 			"scanner":               fmt.Sprintf("%s/perceptor-scanner:%s", baseImageURL, version),
 			"perceptor-imagefacade": fmt.Sprintf("%s/perceptor-imagefacade:%s", baseImageURL, version),
 			"skyfire":               "gcr.io/saas-hub-stg/blackducksoftware/pyfire:master",
@@ -263,6 +267,17 @@ func (p *SpecConfig) GetComponents() (*api.ComponentList, error) {
 		imageClusterRole := p.ImagePerceiverClusterRole()
 		components.ClusterRoles = append(components.ClusterRoles, imageClusterRole)
 		components.ClusterRoleBindings = append(components.ClusterRoleBindings, p.ImagePerceiverClusterRoleBinding(imageClusterRole))
+	}
+
+	// Add Artifactory Perceiver
+	if p.opssight.Spec.Perceiver.EnableArtifactoryPerceiver {
+		rc, err = p.ArtifactoryPerceiverReplicationController()
+		if err != nil {
+			return nil, errors.Annotate(err, "failed to create image perceiver")
+		}
+
+		components.ReplicationControllers = append(components.ReplicationControllers, rc)
+		components.Services = append(components.Services, p.ArtifactoryPerceiverService())
 	}
 
 	if p.opssight.Spec.Perceiver.EnablePodPerceiver || p.opssight.Spec.Perceiver.EnableImagePerceiver {
