@@ -108,14 +108,15 @@ type PodPerceiver struct {
 
 // Perceiver stores the Perceiver configuration
 type Perceiver struct {
-	EnableImagePerceiver       bool          `json:"enableImagePerceiver"`
-	EnableArtifactoryPerceiver bool          `json:"enableArtifactoryPerceiver"`
-	EnableQuayPerceiver        bool          `json:"enableQuayPerceiver"`
-	EnablePodPerceiver         bool          `json:"enablePodPerceiver"`
-	PodPerceiver               *PodPerceiver `json:"podPerceiver,omitempty"`
-	AnnotationIntervalSeconds  int           `json:"annotationIntervalSeconds"`
-	DumpIntervalMinutes        int           `json:"dumpIntervalMinutes"`
-	Expose                     string        `json:"expose"`
+	EnableImagePerceiver             bool          `json:"enableImagePerceiver"`
+	EnableArtifactoryPerceiver       bool          `json:"enableArtifactoryPerceiver"`
+	EnableArtifactoryPerceiverDumper bool          `json:"enableArtifactoryPerceiverDumper"`
+	EnableQuayPerceiver              bool          `json:"enableQuayPerceiver"`
+	EnablePodPerceiver               bool          `json:"enablePodPerceiver"`
+	PodPerceiver                     *PodPerceiver `json:"podPerceiver,omitempty"`
+	AnnotationIntervalSeconds        int           `json:"annotationIntervalSeconds"`
+	DumpIntervalMinutes              int           `json:"dumpIntervalMinutes"`
+	Expose                           string        `json:"expose"`
 }
 
 // Skyfire stores the Skyfire configuration

@@ -133,6 +133,9 @@ func NewSpecConfig(config *protoform.Config, kubeClient *kubernetes.Clientset, o
 			Pod: &PodPerceiverConfig{
 				NamespaceFilter: opssightSpec.Perceiver.PodPerceiver.NamespaceFilter,
 			},
+			Artifactory: &ArtifactoryPerceiverConfig{
+				Dumper: opssightSpec.Perceiver.EnableArtifactoryPerceiverDumper,
+			},
 			AnnotationIntervalSeconds: opssightSpec.Perceiver.AnnotationIntervalSeconds,
 			DumpIntervalMinutes:       opssightSpec.Perceiver.DumpIntervalMinutes,
 			Port:                      3002,
@@ -368,15 +371,15 @@ func (p *SpecConfig) GetComponents() (*api.ComponentList, error) {
 	return components, nil
 }
 
-func (p *SpecConfig) getPerceiverExposeService(name string) (*components.Service, error) {
+func (p *SpecConfig) getPerceiverExposeService(perceiverName string) (*components.Service, error) {
 	var svc *components.Service
 	var err error
 	switch strings.ToUpper(p.opssight.Spec.Perceiver.Expose) {
 	case util.NODEPORT:
-		svc, err = p.PerceiverNodePortService(name)
+		svc, err = p.PerceiverNodePortService(perceiverName)
 		break
 	case util.LOADBALANCER:
-		svc, err = p.PerceiverLoadBalancerService(name)
+		svc, err = p.PerceiverLoadBalancerService(perceiverName)
 		break
 	default:
 	}
